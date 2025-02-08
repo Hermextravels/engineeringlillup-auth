@@ -20,4 +20,4 @@ RUN /opt/keycloak/bin/kc.sh build
 EXPOSE 8080
 
 # Start Keycloak with the resolved port and bind to all interfaces
-CMD ["/opt/keycloak/bin/kc.sh", "start", "--optimized", "--http-port=${PORT:-8080}", "--http-host=0.0.0.0"]
+CMD /opt/keycloak/bin/kc.sh start --optimized --http-port=${PORT:-8080} --http-host=0.0.0.0
