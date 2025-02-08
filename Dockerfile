@@ -13,8 +13,11 @@ ENV KC_DB_URL_DATABASE=${KC_DB_URL_DATABASE}
 ENV KC_DB_USERNAME=${KC_DB_USERNAME}
 ENV KC_DB_PASSWORD=${KC_DB_PASSWORD}
 
-# Build the Keycloak server with optimizations and bind to the port during build
-RUN /opt/keycloak/bin/kc.sh build --http-port=$PORT --http-host=0.0.0.0
+# Build the Keycloak server with optimizations
+RUN /opt/keycloak/bin/kc.sh build
 
-# Start Keycloak with the resolved port
-CMD ["/opt/keycloak/bin/kc.sh", "start", "--optimized"]
+# Expose the dynamic port provided by the environment variable
+EXPOSE ${PORT:-8080}
+
+# Start Keycloak with the resolved port and bind to all interfaces
+CMD ["/opt/keycloak/bin/kc.sh", "start", "--optimized", "--http-port=${PORT}", "--http-host=0.0.0.0"]
