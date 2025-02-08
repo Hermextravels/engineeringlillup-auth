@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:21.1.2
+    container_name: keycloak
+    ports:
+      - "8080:8080"
+    environment:
+      KC_DB: "postgres"
+      KC_DB_URL: "jdbc:postgresql://db.vuocyewlwajlmphvtabo.supabase.co:5432/postgres"
+      KC_DB_USERNAME: "postgres"
+      KC_DB_PASSWORD: "Z3#tV9$kL!x5R%w8"
+      KC_HOSTNAME: "engineeringlillup-auth.onrender.com"
+      KC_HTTP_ENABLED: "true"
+      KC_PROXY: "edge"
+      KC_ADMIN: "admin"
+      KC_ADMIN_PASSWORD: "admin123"
+    command:
+      - start-dev
+    depends_on:
+      - postgres
+    restart: always
+
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "Z3#tV9$kL!x5R%w8"
+    ports:
+      - "5432:5432"
+    restart: always
