@@ -4,19 +4,15 @@ FROM quay.io/keycloak/keycloak:latest
 # ----------------------------
 # Basic Admin Configuration
 # ----------------------------
-# Set default admin credentials.
-# Override these in Render's environment variables for production use.
+# For production, override these via Render’s environment variables.
 ENV KEYCLOAK_ADMIN=admin
 ENV KEYCLOAK_ADMIN_PASSWORD=admin
 
 # ----------------------------
 # Database Configuration
 # ----------------------------
-# Specify the database vendor. In this case, PostgreSQL.
+# Specify the database vendor and connection parameters.
 ENV KC_DB=postgres
-
-# These database connection variables are expected to be provided by Render.
-# Replace these default values or set them in Render's dashboard:
 ENV KC_DB_URL_HOST=${KC_DB_URL_HOST}
 ENV KC_DB_URL_PORT=${KC_DB_URL_PORT}
 ENV KC_DB_URL_DATABASE=${KC_DB_URL_DATABASE}
@@ -26,15 +22,25 @@ ENV KC_DB_PASSWORD=${KC_DB_PASSWORD}
 # ----------------------------
 # Custom Environment Variable
 # ----------------------------
-# Set the custom environment variable ANS with a default value.
-# This value can also be overridden in Render's environment settings.
 ENV ANS=default_ans_value
 
 # ----------------------------
-# Expose Port and Start Keycloak
+# Expose Port
 # ----------------------------
-# Expose port 8080 (for documentation). Render will assign a dynamic port using the PORT variable.
+# Although Render supplies a dynamic port via the PORT variable,
+# it is good practice to include an EXPOSE instruction.
 EXPOSE 8080
 
-# Start Keycloak in development mode, binding to the Render-supplied port.
-CMD ["sh", "-c", "/opt/keycloak/bin/kc.sh start-dev --http-port=${PORT:-8080}"]
+# ----------------------------
+# Override the Default ENTRYPOINT
+# ----------------------------
+# The official Keycloak image sets a default ENTRYPOINT that can conflict
+# with our command-line arguments. Clearing it allows our CMD to run properly.
+ENTRYPOINT []
+
+# ----------------------------
+# Start Keycloak on the Render-supplied Port
+# ----------------------------
+# This CMD uses shell form so that the PORT variable is expanded.
+# If Render provides PORT (e.g. PORT=10000), Keycloak will bind to that port.
+CMD /opt/keycloak/bin/kc.sh start-dev --http-port=${PORT:-8080}
