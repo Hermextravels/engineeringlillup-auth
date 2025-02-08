@@ -14,4 +14,4 @@ ENV KC_DB_USERNAME=${KC_DB_USERNAME}
 ENV KC_DB_PASSWORD=${KC_DB_PASSWORD}
 
 # Ensure Keycloak binds to the correct port and all interfaces
-CMD ["sh", "-c", "/opt/keycloak/bin/kc.sh start --http-host=0.0.0.0 --http-port=${PORT:-8080}"]
+CMD ["/opt/keycloak/bin/kc.sh", "start", "--http-host=0.0.0.0", "--http-port=${PORT}"]
