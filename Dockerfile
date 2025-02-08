@@ -27,20 +27,18 @@ ENV ANS=default_ans_value
 # ----------------------------
 # Expose Port
 # ----------------------------
-# Although Render supplies a dynamic port via the PORT variable,
-# it is good practice to include an EXPOSE instruction.
+# This EXPOSE is for documentation purposes. The actual port will be provided by Render.
 EXPOSE 8080
 
 # ----------------------------
 # Override the Default ENTRYPOINT
 # ----------------------------
-# The official Keycloak image sets a default ENTRYPOINT that can conflict
-# with our command-line arguments. Clearing it allows our CMD to run properly.
+# The official Keycloak image defines an ENTRYPOINT that may interfere with our command.
 ENTRYPOINT []
 
 # ----------------------------
-# Start Keycloak on the Render-supplied Port
+# Start Keycloak with Correct Bindings
 # ----------------------------
-# This CMD uses shell form so that the PORT variable is expanded.
-# If Render provides PORT (e.g. PORT=10000), Keycloak will bind to that port.
-CMD /opt/keycloak/bin/kc.sh start-dev --http-port=${PORT:-8080}
+# This CMD uses the shell to allow environment variable expansion.
+# It ensures Keycloak binds to 0.0.0.0 (all interfaces) and listens on the Render-assigned port.
+CMD ["sh", "-c", "/opt/keycloak/bin/kc.sh start-dev --http-host=0.0.0.0 --http-port=${PORT:-8080}"]
