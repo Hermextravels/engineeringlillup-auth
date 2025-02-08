@@ -16,8 +16,8 @@ ENV KC_DB_PASSWORD=${KC_DB_PASSWORD}
 # Build the Keycloak server with optimizations
 RUN /opt/keycloak/bin/kc.sh build
 
-# Expose the dynamic port provided by the environment variable
-EXPOSE ${PORT:-8080}
+# Expose the default port (8080) or use the dynamic port provided by the environment variable
+EXPOSE 8080
 
 # Start Keycloak with the resolved port and bind to all interfaces
-CMD ["/opt/keycloak/bin/kc.sh", "start", "--optimized", "--http-port=${PORT}", "--http-host=0.0.0.0"]
+CMD ["/opt/keycloak/bin/kc.sh", "start", "--optimized", "--http-port=${PORT:-8080}", "--http-host=0.0.0.0"]
