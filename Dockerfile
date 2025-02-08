@@ -7,7 +7,7 @@ FROM quay.io/keycloak/keycloak:21.1.1
 
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
-# Expose dynamic port for Render
+# Expose the dynamic port
 EXPOSE 8080
 
 # Environment variables for Keycloak
@@ -18,8 +18,9 @@ ENV KC_DB_PASSWORD=${DB_PASSWORD}
 ENV KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
 ENV KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
 ENV KC_PROXY_ADDRESS_FORWARDING=${PROXY_ADDRESS_FORWARDING}
+ENV KC_HOSTNAME=${RENDER_EXTERNAL_URL}
 
-# Set the entrypoint
+# Entry point
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
 
 # Start Keycloak with optimized options
