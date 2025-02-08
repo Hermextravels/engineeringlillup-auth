@@ -1,26 +1,15 @@
-# Use the official Keycloak image
-FROM quay.io/keycloak/keycloak:latest
+# Use the official Keycloak image from Quay (adjust the version as needed)
+FROM quay.io/keycloak/keycloak:21.1.1
 
-# Set basic admin credentials (override these in Render's environment variables)
+# (Optional) Set default admin credentials. For production, consider setting these via environment variables on Render.
 ENV KEYCLOAK_ADMIN=admin
 ENV KEYCLOAK_ADMIN_PASSWORD=admin
 
-# Configure database connection (override these in Render's environment variables)
-ENV KC_DB=postgres
-ENV KC_DB_URL_HOST=${KC_DB_URL_HOST}
-ENV KC_DB_URL_PORT=${KC_DB_URL_PORT}
-ENV KC_DB_URL_DATABASE=${KC_DB_URL_DATABASE}
-ENV KC_DB_USERNAME=${KC_DB_USERNAME}
-ENV KC_DB_PASSWORD=${KC_DB_PASSWORD}
-
-# Copy the entrypoint script
-COPY entrypoint.sh /entrypoint.sh
-
-# Build the Keycloak server with optimizations
+# Build the Keycloak distribution. This step compiles your custom configuration if needed.
 RUN /opt/keycloak/bin/kc.sh build
 
-# Expose the default port (8080) or use the dynamic port provided by the environment variable
+# Expose the default port (adjust if you change the port configuration)
 EXPOSE 8080
 
-# Set the entrypoint
-ENTRYPOINT ["/entrypoint.sh"]
+# Start Keycloak in development mode. For production, refer to the official docs.
+CMD ["start-dev"]
