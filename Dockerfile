@@ -13,11 +13,14 @@ ENV KC_DB_URL_DATABASE=${KC_DB_URL_DATABASE}
 ENV KC_DB_USERNAME=${KC_DB_USERNAME}
 ENV KC_DB_PASSWORD=${KC_DB_PASSWORD}
 
+# Copy the entrypoint script
+COPY entrypoint.sh /entrypoint.sh
+
 # Build the Keycloak server with optimizations
 RUN /opt/keycloak/bin/kc.sh build
 
 # Expose the default port (8080) or use the dynamic port provided by the environment variable
 EXPOSE 8080
 
-# Start Keycloak with the resolved port and bind to all interfaces
-CMD /opt/keycloak/bin/kc.sh start --optimized --http-port=${PORT:-8080} --http-host=0.0.0.0
+# Set the entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
